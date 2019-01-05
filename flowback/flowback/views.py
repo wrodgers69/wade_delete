@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.views import View
 from django.urls import reverse, reverse_lazy
-from flowback.forms import CrispyModelForm
+from flowback.forms import CrispyModelForm #CrispyDataForm
 from django.views.generic.edit import FormView
 from PIL import Image
 from django.contrib.auth.decorators import login_required
@@ -31,6 +31,22 @@ class well_information(View):
     def get(self, request):
         form = CrispyModelForm()
         return render(request, 'flowback/well_information.html', {
+        'form': form
+        })
+
+    @method_decorator(login_required)
+    def post(self, request):
+        form = CrispyModelForm(request.POST)
+        if form.is_valid():
+            form.save()
+
+        return HttpResponseRedirect(reverse('flowback:success'))
+
+class well_data(View):
+    @method_decorator(login_required)
+    def get(self, request):
+        form = CrispyDataForm()
+        return render(request, 'flowback/inputdata.html', {
         'form': form
         })
 
